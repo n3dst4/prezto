@@ -5,9 +5,69 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+export TERM=xterm-256color
+
+# crafty alias for git to store dotfiles in a headless repository
+#export GIT_SSH_COMMAND="ssh -oVisualHostKey=no"
+#alias dotfiles='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+#alias dot='dotfiles'
+#dot config status.showUntrackedFiles no 
+#dot fetch
+#dot status
+. ~/.local/bin/dotfiles.zsh
+
+. ~/.local/bin/unln.sh
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+else
+  echo "Prezto is missing!"
 fi
 
 # Customize to your needs...
+export EDITOR='vim' 
+# WSL bug, see https://github.com/wting/autojump/issues/474 
+unsetopt BG_NICE                                            
+
+
+# handy git aliases so you can git like doge
+alias g=git
+alias wow="git status"
+alias such=git
+alias very=git
+
+# nvm
+NVM_DIR="$HOME/.nvm"
+if [[ -d $NVM_DIR ]]; then
+	# if we're doing all this, it's safe to export $NVM_DIR
+	export NVM_DIR
+	# load nvm
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" --no-use  
+	# load nvm bash_completion
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  
+	# kick off nvm if it's not engaged yet
+	if [[ -z $NVM_BIN ]]; then
+		echo "\$NVM_BIN is empty, running \`nvm use node\`"
+		nvm use node
+	fi
+fi
+
+# npm login shortcuts
+alias login-n3dst4="npm-login.expect n3dst4 oRWKeINcRcetImHbdJuPn4C/ npm@lumphammer.com"
+alias login-sportingsolutions="npm-login.expect sportingsolutions 6Q68peopEpFOWEvO npm@sportingsolutions.com"
+
+# directory colors
+eval `dircolors $HOME/.dircolors`
+
+
+# if there's a .fakehostname, use the contents as $HOST
+if [ -f "${HOME}/.fakehostname" ]; then
+	export HOST=$(cat "${HOME}/.fakehostname")
+fi
+
+function colors {
+	for i in {0..255}; do 
+		printf "\x1b[38;5;${i}mcolour${i}\x1b[0m\n"; 
+	done
+}
